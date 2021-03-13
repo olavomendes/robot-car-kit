@@ -18,10 +18,12 @@ unsigned char L_PWM_VAL = 150; // VALOR DA VELOCIDADE
 unsigned char R_PWM_VAL = 150;
 int carState = 0;
 
+// CONFIGURAÇÕES DO IR
 int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
+// FUNÇÃO DE DEFINIÇÃO DOS PINOS
 void controlConfig(void) {
   pinMode(pinLB,OUTPUT); 
   pinMode(pinLF,OUTPUT); 
@@ -31,11 +33,13 @@ void controlConfig(void) {
   pinMode(R_PWM_PIN, OUTPUT);
 }
 
+// FUNÇÃO PARA CONTROLE DE VELOCIDADE DOS MOTORES
 void setSpeed(unsigned char left, unsigned char right) {
-  analogWrite(L_PWM_PIN, left);
-  analogWrite(R_PWM_PIN, right);
+  analogWrite(L_PWM_PIN, left); // O PINO DE VELOCIDADE DOS MOTORES ESQUERDO RECEBE UM VALOR DE VELOCIDADE
+  analogWrite(R_PWM_PIN, right); // O PINO DE VELOCIDADE DOS MOTORES DIREITOS RECEBE UM VALOR DE VELOCIDADE
 }
 
+// FUNÇÃO PARA FAZER O CARRINHO AVANÇAR
 void advance() {
   digitalWrite(pinRB, LOW);
   digitalWrite(pinRF, HIGH);
@@ -43,7 +47,7 @@ void advance() {
   digitalWrite(pinLF, HIGH);
   carState = 1;
 }
-
+// FUNÇÃO PARA FAZER O CARRINHO VIRAR À DIREITA
 void turnRight() {
   digitalWrite(pinRB, LOW);
   digitalWrite(pinRF, HIGH);
@@ -51,7 +55,7 @@ void turnRight() {
   digitalWrite(pinLF, LOW);
   carState = 4;
 }
-
+// FUNÇÃO PARA FAZER O CARRINHO VIRAR À ESQUERDA
 void turnLeft() {
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, LOW);
@@ -59,7 +63,7 @@ void turnLeft() {
   digitalWrite(pinLF, HIGH);
   carState = 3;
 }
-
+// FUNÇÃO PARA FAZER O CARRINHO VOLTAR
 void back() {
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, LOW);
@@ -67,7 +71,7 @@ void back() {
   digitalWrite(pinLF, LOW);
   carState = 2;  
 }
-
+// FUNÇÃO PARA FAZER O CARRINHO PARAR
 void stop() {
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, HIGH);
@@ -76,12 +80,14 @@ void stop() {
   carState = 5;
 }
 
+// FUNÇÃO PARA CONTROLE DO CARRINHO
 void IRControl(void) {
-  unsigned long key;
+  unsigned long key; 
 
-  if (irrecv.decode(&results)) {
-    key = results.value;
+  if (irrecv.decode(&results)) { // DECODIFICA O SINAL ENVIADO
+    key = results.value; // ARMAZENA O VALOR NA VARIÁVEL "KEY"
 
+    // SWITCH PARA CHAMAR AS FUNÇÕES DE ACORDO COM O BOTÃO PRESSIONADO
     switch(key) {
       case IR_GO: advance(); break;
       case IR_BACK: back(); break;
@@ -96,13 +102,13 @@ void IRControl(void) {
 }
 
 void setup() {
-  controlConfig();
-  setSpeed(L_PWM_VAL, R_PWM_VAL);
-  irrecv.enableIRIn();
-  Serial.begin(9600);
-  stop();
+  controlConfig(); // CONFIGURAÇÕES DOS PINOS
+  setSpeed(L_PWM_VAL, R_PWM_VAL); // DEFINE OS VALORES DE VELOCIDADE
+  irrecv.enableIRIn(); // INICIA O "RECEIVER"
+  Serial.begin(9600); // INICIA O SERIAL
+  stop(); // O CARRINHO INICIALMENTE FICA PARADO
 }
 
 void loop() {
-  IRControl();
+  IRControl(); // CHAMA A FUNÇÃO PARA CONTROLE DO CARRINHO
 }
