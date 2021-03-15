@@ -17,8 +17,7 @@ int myAngle; // ÂNGULO
 int pulseWidth;  // PW
 unsigned char angle90 = 90; // ÂNGULO DE 90°
 
-
-
+// CONFIGURAÇÕES PARA O SETUP
 void controlConfig(void) {
   pinMode(pinLB,OUTPUT); 
   pinMode(pinLF,OUTPUT); 
@@ -30,13 +29,12 @@ void controlConfig(void) {
 
 // FUNÇÃO PARA A VELOCIDADE DO CARRINHO
 void setSpeed(unsigned char left, unsigned char right) {
-  analogWrite(L_PWM_PIN, left); // PASSA A VELOCIDADE DEFINIDA ACIMA (L_PWM_VAL) PARA O PINO DA VELOCIDADE
-  analogWrite(R_PWM_PIN, right);
+  analogWrite(L_PWM_PIN, left); // PASSA O PARÂMETRO DE VELOCIDADE (L_PWM_VAL) PARA O PINO DA VELOCIDADE DO LADO ESQUERDO
+  analogWrite(R_PWM_PIN, right); // PASSA O PARÂMETRO DE VELOCIDADE (r_PWM_VAL) PARA O PINO DA VELOCIDADE DO LADO DIREITO
 }
 
 // FUNÇÃO PARA ANDAR PARA FRENTE
 void advance() {
-  // NOTE QUE AS RODAS DE AMBOS OS LADOS (DIREITO E ESQUERDO) DEVEM SEGUIR O MESMO FLUXO
   digitalWrite(pinRB, LOW);
   digitalWrite(pinRF, HIGH);
   digitalWrite(pinLB, LOW);
@@ -45,7 +43,6 @@ void advance() {
 
 // FUNÇÃO PARA VIRAR À DIREITA 
 void turnRight() {
-  // NOTE QUE AS RODAS DE AMBOS OS LADOS (DIREITO E ESQUERDO) DEVEM SEGUIR UM FLUXO OPOSTO
   digitalWrite(pinRB, LOW);
   digitalWrite(pinRF, HIGH);
   digitalWrite(pinLB, HIGH);
@@ -54,7 +51,6 @@ void turnRight() {
 
 // FUNÇÃO PARA VIRAR À ESQUERDA
 void turnLeft() {
-  // NOTE QUE AS RODAS DE AMBOS OS LADOS (DIREITO E ESQUERDO) DEVEM SEGUIR UM FLUXO OPOSTO
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, LOW);
   digitalWrite(pinLB, LOW);
@@ -63,7 +59,6 @@ void turnLeft() {
 
 // FUNÇÃO PARA PARAR O CARRINHO
 void stop() {
-  // NOTE QUE AS RODAS DE AMBOS OS LADOS (DIREITO E ESQUERDO) DEVEM ESTAR COMO "HIGH"
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, HIGH);
   digitalWrite(pinLB, HIGH);
@@ -72,18 +67,17 @@ void stop() {
 
 // FUNÇÃO PARA VOLTAR
 void back() {
-  // NOTE QUE AS RODAS DE AMBOS OS LADOS (DIREITO E ESQUERDO) DEVEM SEGUIR O MESMO FLUXO, QUE É O FLUXO CONTRÁRIO AO DA FUNÇÃO "ADVANCE"
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, LOW);
   digitalWrite(pinLB, HIGH);
   digitalWrite(pinLF, LOW);
 }
 
-// FUNÇÃO PARA O CARRINHO CONTROLAR A PRÓPRIA DIREÇÃO
+// FUNÇÃO DE CONTROLE AUTOMÁTICO DO CARRINHO
 void selfControl(void) {
   int H;
   myServo.write(angle90); // O SERVO FICA EM 90°
-  H = ultrasonicRaging(1); // A FUNÇÃO RECEBE O MODO 1, QUE É "AVANÇAR"
+  H = ultrasonicRaging(1); // A FUNÇÃO RECEBE O MODO 1 (QUE MEDE A DISTÂNCIA FRONTAL ATÉ UM OBJETO)
   delay(300);
 
   // SE A DISTÂNCIA FOR MENOR QUE 15 CM, O CARRINHO PARA E VOLTA 
@@ -99,10 +93,10 @@ void selfControl(void) {
     stop(); // PARA
     delay(100);
     myServo.write(0); // SERVO FICA NO ÂNGULO 0°
-    int L = askPinL(2); // MEDE A DISTÂNCIA À ESQUERDA
+    int L = askPinL(2); // PARA O MODO 2 (MEDE A DISTÂNCIA À ESQUERDA) COMO PARÂMETRO
     delay(300);
     myServo.write(180); // SERVO FICA NO ÂNGULO 180°
-    int R = askPinR(3); // MEDE A DISTÂNCIA À DIREITA
+    int R = askPinR(3); // PARA O MODO 3 (MEDE A DISTÂNCIA À DIREITA) COMO PARÂMETRO
     delay(300);
 
     // SE A DISTÂNCIA DA ESQUERDA FOR MAIOR QUE DA DIREITA
@@ -133,7 +127,7 @@ void selfControl(void) {
       delay(300);      
     }
     
-    // SE A DISTÂNCIA DA ESQUERDA E DÁ DIREITA FOREM MENORES QUE 35 CM
+    // SE A DISTÂNCIA DA ESQUERDA E DA DIREITA FOREM MENORES QUE 35 CM
     // O CARRINHO PARA E VOLTA
     if (askPinL(2) < 35 && askPinR(3) < 35) {
       stop(); // PARA
@@ -215,17 +209,17 @@ int askPinR(unsigned char mode) {
 }
 
 void setup() {
-  myServo.attach(A2);
-  controlConfig();
-  setSpeed(L_PWM_VAL, R_PWM_VAL);
-  myServo.write(angle90);
-  pinMode(inputPin, INPUT);
-  pinMode(outputPin, OUTPUT);
-  Serial.begin(9600);
-  stop();
+  myServo.attach(A2); // ANEXA O SERVO À PORTA A2
+  controlConfig(); // CHAMA A FUNÇÃO DA CONFIGURAÇÃO DOS PINOS
+  setSpeed(L_PWM_VAL, R_PWM_VAL); // DEFINE A VELOCIDADE
+  myServo.write(angle90); // COLOCA O SERVO NO ÂNGULO 90°
+  pinMode(inputPin, INPUT); // ECHO 
+  pinMode(outputPin, OUTPUT); // TRIG
+  Serial.begin(9600); // INICIA O SERIAL
+  stop(); // O CARRINHO COMEÇA PARADO
   delay(1000);
 }
 
 void loop() {
-  selfControl();
+  selfControl(); // CHAMA A FUNÇÃO DE CONTROLE AUTOMÁTICO
 }
