@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 Servo myServo;
-int position = 0;
+int pos = 0; // posição do servo
 
 void setup() {
   myServo.attach(A2);
@@ -9,12 +9,12 @@ void setup() {
 
 void loop() {
 
-  for (position; position<=180; position++) {
-    myServo.write(position);
+  for (pos; pos<=180; pos++) {
+    myServo.write(pos);
     delay(15);
   }
-  for (position=180; position>=0; position--) {
-    myServo.write(position);
+  for (pos=180; pos>=0; pos--) {
+    myServo.write(pos);
     delay(15);
   }
 }

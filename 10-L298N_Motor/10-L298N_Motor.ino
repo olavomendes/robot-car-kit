@@ -1,3 +1,4 @@
+// ENTRADAS DO L298N
 int IN1 = 2;
 int IN2 = 4;
 int IN3 = 7;
@@ -26,12 +27,16 @@ void loop() {
   digitalWrite(IN4, HIGH);
   delay(2000);
 
-  // TODOS OS MOTORES PARAM
+  // TODOS AS RODAS PARAM PARAM
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, HIGH);
   delay(2000);
+
+  // TODAS AS RODAS PARAM (ALGORITMO OPCIONAL)
+  // analogWrite(ENA, 0);
+  // analogWrite(ENB, 0);
   
   // DIREÇÃO: TRÁS
   digitalWrite(IN1, HIGH);

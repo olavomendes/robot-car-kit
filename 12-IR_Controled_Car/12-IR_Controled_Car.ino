@@ -1,17 +1,17 @@
 #include <IRremote.h>
-#define IR_GO 0x00ff629d
-#define IR_BACK 0x00ffa857
-#define IR_LEFT 0x00ff22dd
-#define IR_RIGHT 0x00ffc23d
-#define IR_STOP 0x00ff02fd
-#define IR_ESC 0x00ff52ad
+#define IR_GO 0x00ff629d // FRENTE
+#define IR_BACK 0x00ffa857 // RÉ
+#define IR_LEFT 0x00ff22dd // VIRAR À ESQUERDA
+#define IR_RIGHT 0x00ffc23d // VIRAR _A DIREITA
+#define IR_STOP 0x00ff02fd // PARAR
+#define IR_ESC 0x00ff52ad 
 #define L_PWM_PIN 5 // PINO DA VELOCIDADE DAS RODAS DA ESQUERDA
 #define R_PWM_PIN 6 // PINO DA VELOCIDADE DAS RODAS DA DIREITA
 
 // TAMBÉM PODEM SER CHAMADOS DE IN1, IN2, IN3 e IN4
-int pinLB = 2; // RODA TRASEIRO ESQUERDA
+int pinLB = 2; // RODA TRASEIRA ESQUERDA
 int pinLF = 4; // RODA FRONTAL ESQUERDA
-int pinRB = 7; // RODA TRASEIRO DIREITA
+int pinRB = 7; // RODA TRASEIRA DIREITA
 int pinRF = 8; // RODA FRONTAL DIREITA
 
 unsigned char L_PWM_VAL = 150; // VALOR DA VELOCIDADE
@@ -94,8 +94,7 @@ void IRControl(void) {
       case IR_LEFT: turnLeft(); break;
       case IR_RIGHT: turnRight(); break;
       case IR_STOP: stop(); break;
-      default: 
-      break;
+      default: break;
     }
     irrecv.resume(); // RECEBE O PRÓXIMO VALOR
   }
@@ -104,8 +103,8 @@ void IRControl(void) {
 void setup() {
   controlConfig(); // CONFIGURAÇÕES DOS PINOS
   setSpeed(L_PWM_VAL, R_PWM_VAL); // DEFINE OS VALORES DE VELOCIDADE
-  irrecv.enableIRIn(); // INICIA O "RECEIVER"
-  Serial.begin(9600); // INICIA O SERIAL
+  irrecv.enableIRIn(); // INICIA O RECEPTOR
+  Serial.begin(9600); // INICIA O MONITOR SERIAL
   stop(); // O CARRINHO INICIALMENTE FICA PARADO
 }
 
