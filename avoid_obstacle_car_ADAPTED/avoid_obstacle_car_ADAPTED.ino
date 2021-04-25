@@ -1,5 +1,6 @@
-#include <Servo.h>
 #include <SR04.h>
+#include <Servo.h>
+
 // PINOS DO SENSOR ULTRASSONICO
 #define TRIG_PIN A1
 #define ECHO_PIN A0
@@ -22,8 +23,8 @@ int IN3 = 7;
 int IN4 = 8;
 
 // VELOCIDADE DOS MOTORES
-int velA = 70;
-int velB = 70;
+int velA = 50;
+int velB = 50;
 // CONTADOR
 int i = 2;
 
@@ -68,10 +69,10 @@ void stopp() {
 void left() {
   digitalWrite(velPinA, 50);
   digitalWrite(velPinB, 50);
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
   delay(300);
   stopp();
 }
@@ -79,10 +80,10 @@ void left() {
 void right() {
   digitalWrite(velPinA, 50);
   digitalWrite(velPinB, 50);
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
   delay(300);
   stopp();
 }
@@ -108,13 +109,7 @@ int measureDistance() {
 //   }
 // }
 
-void setup() {
-  controlConfig();
-  stopp();  
-}
-
-void loop() {
-
+void avoidObstacle() {
   myServo.write(90);
   advance(); // O CARRINHO AVANÇA
   distance = measureDistance(); // A DISTÂNCIA FRONTAL É MEDIDA
@@ -159,5 +154,14 @@ void loop() {
   // servo();
   // Serial.print(distance);
   // Serial.println(" cm");
-  // delay(500);
+  // delay(500); 
+}
+
+void setup() {
+  controlConfig();
+  stopp();  
+}
+
+void loop() {
+  avoidObstacle();
 }
