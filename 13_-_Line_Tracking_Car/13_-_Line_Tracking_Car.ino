@@ -31,11 +31,11 @@ void sensorScan() {
 }
 
 void controlConfig(){
-  pinMode(pinLB,OUTPUT); // pin 2--IN1 of motor driver board
-  pinMode(pinLF,OUTPUT); // pin 4--IN2 of motor driver board
-  pinMode(pinRB,OUTPUT); // pin 7--IN3 of motor driver board
-  pinMode(pinRF,OUTPUT); // pin 8--IN4 of motor driver board
-  pinMode(l_pwm_pin,OUTPUT); // pin 5  (PWM) --ENA of motor driver board
+  pinMode(pinLB,OUTPUT); 
+  pinMode(pinLF,OUTPUT); 
+  pinMode(pinRB,OUTPUT); 
+  pinMode(pinRF,OUTPUT); 
+  pinMode(l_pwm_pin,OUTPUT); 
   pinMode(r_pwm_pin,OUTPUT);
 }
 
@@ -63,8 +63,8 @@ void turnRight() {
 void turnLeft() {
   digitalWrite(pinRB, HIGH);
   digitalWrite(pinRF, LOW);
-  digitalWrite(pinLB, HIGH);
-  digitalWrite(pinLF, LOW);
+  digitalWrite(pinLB, LOW);
+  digitalWrite(pinLF, HIGH);
   car_state = 3;
 }
 
@@ -104,9 +104,11 @@ void loop() {
     advance();
     }
   } else {
-    if (SL == LOW & SL == HIGH) {
+    if (SL == LOW & SR == HIGH) {
+      turnRight();
+    }else if (SR == LOW & SL == HIGH) {
       turnLeft();
-    }else {
+    } else {
       back();
       delay(100);
       stopp();

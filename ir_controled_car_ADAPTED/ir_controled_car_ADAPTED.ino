@@ -21,8 +21,12 @@ int IN3 = 7;
 int IN4 = 8;
 
 // VELOCIDADE DOS MOTORES
-int velA = 100;
-int velB = 100;
+// int velA = 100;
+// int velB = 100;
+int quarter_vel = 64;
+int half_vel = 128;
+int full_vel = 255;
+
 int i = 2; // CONTADOR
 
 // CONFIGURAÇÕES  INICIAIS
@@ -36,8 +40,8 @@ void controlConfig() {
 
 // COMANDO PARA O CARRINHO AVANÇAR
 void advance() {
-  digitalWrite(velPinA, velA);
-  digitalWrite(velPinB, velB);
+  digitalWrite(velPinA, half_vel);
+  digitalWrite(velPinB, half_vel);
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
@@ -45,8 +49,8 @@ void advance() {
 }
 // COMANDO PARA O CARRINHO VOLTAR
 void back() {
-  digitalWrite(velPinA, 50);
-  digitalWrite(velPinB, 50);
+  digitalWrite(velPinA, quarter_vel);
+  digitalWrite(velPinB, quarter_vel);
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, HIGH);
@@ -54,8 +58,8 @@ void back() {
 }
 // COMANDO PARA O CARRINHO IR PARA A ESQUERDA
 void left() {
-  digitalWrite(velPinA, 50);
-  digitalWrite(velPinB, 50);
+  digitalWrite(velPinA, quarter_vel);
+  digitalWrite(velPinB, quarter_vel);
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
@@ -65,8 +69,8 @@ void left() {
 }
 // COMANDO PARA O CARRINHO IR PARA A DIREITA
 void right() {
-  digitalWrite(velPinA, 50);
-  digitalWrite(velPinB, 50);
+  digitalWrite(velPinA, quarter_vel);
+  digitalWrite(velPinB, quarter_vel);
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
