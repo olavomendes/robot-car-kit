@@ -1,4 +1,4 @@
-// ENTRADAS DO L298N
+/ ENTRADAS DO L298N
 int IN1 = 2;
 int IN2 = 4;
 int IN3 = 7;
