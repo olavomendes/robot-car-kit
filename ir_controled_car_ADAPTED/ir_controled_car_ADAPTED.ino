@@ -23,15 +23,15 @@ int IN4 = 8;
 // VELOCIDADE DOS MOTORES
 // int velA = 100;
 // int velB = 100;
-int quarter_vel = 64;
-int half_vel = 128;
-int full_vel = 255;
+int quarter_vel = 64; // 1/4 DA VELOCIDADE MÁXIMA
+int half_vel = 128; // METADE DA VELOCIDADE MÁXIMA
+int full_vel = 255; // VELOCIDADE MÁXIMA
 
 int i = 2; // CONTADOR
 
 // CONFIGURAÇÕES  INICIAIS
 void controlConfig() {
-  for(i; i< 9; i++){
+  for(i; i<=8; i++){
     pinMode(i, OUTPUT);
   }
   Serial.begin(9600); // INICIA O SERIAL
