@@ -1,4 +1,4 @@
-/ ENTRADAS DO L298N
+// ENTRADAS DO L298N
 int IN1 = 2;
 int IN2 = 4;
 int IN3 = 7;
@@ -8,7 +8,7 @@ int ENB = 6;
 
 
 void setup() {
-  for (int i=2; i<9; i++) {
+  for (int i=2; i<=8; i++) {
     pinMode(i, OUTPUT);
   }
 }
@@ -34,7 +34,7 @@ void loop() {
   digitalWrite(IN4, HIGH);
   delay(2000);
 
-  // TODAS AS RODAS PARAM (ALGORITMO OPCIONAL)
+  // TODAS AS RODAS PARAM (OUTRA MANEIRA DE FAZER ISSO)
   // analogWrite(ENA, 0);
   // analogWrite(ENB, 0);
   
