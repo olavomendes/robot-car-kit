@@ -1,4 +1,4 @@
-// ENTRADAS DO L298N
+// Entradas do L298N
 int IN1 = 2;
 int IN2 = 4;
 int IN3 = 7;
@@ -14,42 +14,40 @@ void setup() {
 }
 
 void loop() {
-  // VELOCIDADE DAS RODAS DA DIREITA
+  // Velocidade das rodas direitas
   analogWrite(ENA, 200);
-  // VELOCIDADE DAS RODAS DA ESQUERDA
+  // Velocidade das rodas esquerdas
   analogWrite(ENB, 200);
 
-  // RODAS DA DIREITA / DIREÇÃO: FRENTE
+  // Vai pra frente
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
-  // RODAS DA ESQUERDA / DIREÇÃO: FRENTE
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   delay(2000);
 
-  // TODOS AS RODAS PARAM PARAM
+  // Para
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, HIGH);
   delay(2000);
 
-  // TODAS AS RODAS PARAM (OUTRA MANEIRA DE FAZER ISSO)
+  // Para - código alternativo
   // analogWrite(ENA, 0);
   // analogWrite(ENB, 0);
   
-  // DIREÇÃO: TRÁS
+  // Volta
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
   delay(2000);
 
-  // TODOS OS MOTORES PARAM
+  // Para novamente
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, HIGH);
   delay(2000);
-
 }
