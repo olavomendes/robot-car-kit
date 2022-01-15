@@ -1,9 +1,9 @@
 #include "SR04.h"
 
-#define TRIG_PIN A1
+#define TRIGGER_PIN A1
 #define ECHO_PIN A0
 
-SR04 sr04 = SR04(ECHO_PIN, TRIG_PIN);
+SR04 ultrasonicSensor = SR04(ECHO_PIN, TRIGGER_PIN);
 long distance = 0;
 
 
@@ -12,7 +12,7 @@ void setup() {
 }
 
 void loop() {
-  distance = sr04.Distance();
+  distance = ultrasonicSensor.Distance();
   Serial.print(distance);
   Serial.println(" cm");
   delay(1000);
