@@ -21,10 +21,8 @@ int quarterVelocity = 64;
 int halfVelocity = 128; 
 int fullVelocity = 255; 
 
-int i = 2;
-
 void controlConfig() {
-  for(i; i<=8; i++){
+  for(int i=2; i<=8; i++){
     pinMode(i, OUTPUT);
   }
   Serial.begin(9600); 
