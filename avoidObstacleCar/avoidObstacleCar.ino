@@ -77,9 +77,6 @@ void stopMoviment() {
 
 int measureDistance() {
   obstracleDistance = ultrasonicSensor.Distance();
-  // Serial.print(distance);
-  // Serial.println(" cm");
-  // delay(500);
   return obstracleDistance;
 }
 
@@ -115,8 +112,7 @@ void avoidObstacle() {
     } else {
        goRight(); 
        delay(1000);
-       stopMoviment(); 
-      
+       stopMoviment();  
     }
   }
 }
