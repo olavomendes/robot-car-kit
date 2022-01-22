@@ -1,117 +1,115 @@
-#define sensorLeft 9
-#define sensorMiddle 10
-#define sensorRight 11
-#define l_pwm_pin 5
-#define r_pwm_pin 6
+#define leftSensor 9
+#define middleSensor 10
+#define rightSensor 11
+#define velocityPinA 5
+#define velocityPinB 6
 
-unsigned char SL; // state of sensor
-unsigned char SM;
-unsigned char SR;
+unsigned char leftSensorState;
+unsigned char middleSensorState;
+unsigned char rightSensorState;
 
-int pinLB = 2;
-int pinLF = 4;
-int pinRB = 7;
-int pinRF = 8;
+int IN1 = 2;
+int IN2 = 4;
+int IN3 = 7;
+int IN4 = 8;
 
-unsigned char l_pwm_val = 120;
-unsigned char r_pwm_val = 120;
+unsigned char leftMotorVelocity = 120;
+unsigned char rightMotorVelocity = 120;
 
 int car_state = 0;
 
 void sensorConfig() {
-  pinMode(sensorLeft, INPUT);
-  pinMode(sensorMiddle, INPUT);
-  pinMode(sensorRight, INPUT);
+  pinMode(leftSensor, INPUT);
+  pinMode(middleSensor, INPUT);
+  pinMode(rightSensor, INPUT);
 }
 
-void sensorScan() {
-  SL = digitalRead(sensorLeft);
-  SM = digitalRead(sensorMiddle);
-  SR = digitalRead(sensorRight);
+void sensorScanner() {
+  leftSensorState = digitalRead(leftSensor);
+  middleSensorState = digitalRead(middleSensor);
+  rightSensorState = digitalRead(rightSensor);
 }
 
-void controlConfig(){
-  pinMode(pinLB,OUTPUT); 
-  pinMode(pinLF,OUTPUT); 
-  pinMode(pinRB,OUTPUT); 
-  pinMode(pinRF,OUTPUT); 
-  pinMode(l_pwm_pin,OUTPUT); 
-  pinMode(r_pwm_pin,OUTPUT);
+void controlConfig() {
+  for(int i=2; i<=8; i++){
+    pinMode(i, OUTPUT);
+  }
 }
 
-void setSpeed(unsigned char left, unsigned char right) {
-  analogWrite(l_pwm_pin, left);
-  analogWrite(r_pwm_pin, right);
+void setMotorVelocity(unsigned char leftVelocity, unsigned char rightVelocity) {
+  analogWrite(leftMotorVelocity, leftVelocity);
+  analogWrite(rightMotorVelocity, rightVelocity);
 }
 
-void advance() {
-  digitalWrite(pinRB, LOW);
-  digitalWrite(pinRF, HIGH);
-  digitalWrite(pinLB, LOW);
-  digitalWrite(pinLF, HIGH);
-  car_state = 1;
+void goAdvance() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
 }
 
-void turnRight() {
-  digitalWrite(pinRB, LOW);
-  digitalWrite(pinRF, HIGH);
-  digitalWrite(pinLB, HIGH);
-  digitalWrite(pinLF, LOW);
-  car_state = 4;
+void goBack() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
 }
 
-void turnLeft() {
-  digitalWrite(pinRB, HIGH);
-  digitalWrite(pinRF, LOW);
-  digitalWrite(pinLB, LOW);
-  digitalWrite(pinLF, HIGH);
-  car_state = 3;
+void goLeft() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  delay(300);
+  stopMoviment();
 }
 
-void stopp() {
-  digitalWrite(pinRB, HIGH);
-  digitalWrite(pinRF, HIGH);
-  digitalWrite(pinLB, HIGH);
-  digitalWrite(pinLF, HIGH);
-  car_state = 5;
+void goRight() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  delay(300);
+  stopMoviment();
 }
 
-void back() {
-  digitalWrite(pinRB, HIGH);
-  digitalWrite(pinRF, LOW);
-  digitalWrite(pinLB, HIGH);
-  digitalWrite(pinLF, LOW);
-  car_state = 2;
+void stopMoviment() {
+  digitalWrite(velocityPinA, 0);
+  digitalWrite(velocityPinB, 0);
 }
 
 void setup() {
   sensorConfig();
   controlConfig();
-  setSpeed(l_pwm_val, r_pwm_val);
-  stopp();
-  unsigned char oldSL, oldSM, oldSR;
+  setMotorVelocity(leftMotorVelocity, rightMotorVelocity);
+  stopMoviment();
+  unsigned char oldLeftSensorState, oldMiddleSensorState, oldRightSensorState;
 }
 
 void loop() {
-  sensorScan();
+  sensorScanner();
 
-  if (SM == HIGH) {
-    if (SL == LOW & SR == HIGH){
-      turnRight();
-  }else if (SR == LOW & SL == HIGH) {
-    turnLeft();
+  if (middleSensorState == HIGH) {
+    if (leftSensorState == LOW & rightSensorState == HIGH){
+      goRight();
+      
+  }else if (rightSensorState == LOW & leftSensorState == HIGH) {
+    goLeft();
   } else {
-    advance();
+    goAdvance();
     }
+    
   } else {
-    if (SL == LOW & SR == HIGH) {
-      turnRight();
-    }else if (SR == LOW & SL == HIGH) {
-      turnLeft();
+    if (leftSensorState == LOW & rightSensorState == HIGH) {
+      goRight();
+      
+    }else if (rightSensorState == LOW & leftSensorState == HIGH) {
+      goLeft();
+      
     } else {
-      back();
+      goBack();
       delay(100);
-      stopp();
+      stopMoviment();
     }
   }
-} // final
+}
