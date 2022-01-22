@@ -57,7 +57,7 @@ void goLeft() {
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
   delay(300);
-  stopp();
+  stopMoviment();
 }
 
 void goRight() {
@@ -68,10 +68,10 @@ void goRight() {
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   delay(300);
-  stopp();
+  stopMoviment();
 }
 
-void stopp() {
+void stopMoviment() {
   digitalWrite(velocityPinA, 0);
   digitalWrite(velocityPinB, 0);
 }
@@ -87,7 +87,7 @@ void IRControl(void) {
       case IR_BACK_BUTTON: goBack(); break;
       case IR_RIGHT_BUTTON: goRight(); break;
       case IR_LEFT_BUTTON: goLeft(); break;
-      case IR_STOP_BUTTON: stopp(); break;
+      case IR_STOP_BUTTON: stopMoviment(); break;
       default: break;
       
     }
@@ -97,7 +97,7 @@ void IRControl(void) {
 
 void setup() {
   controlConfig(); 
-  stopp(); 
+  stopMoviment(); 
 }
 
 void loop() {
