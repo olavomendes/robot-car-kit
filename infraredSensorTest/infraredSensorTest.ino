@@ -1,4 +1,4 @@
-s p#include <IRremote.h>
+#include <IRremote.h>
 
 int InfraredReceiverPin = 12;
  
