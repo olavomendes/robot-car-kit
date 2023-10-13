@@ -1,47 +1,53 @@
 #include <SR04.h>
 #include <Servo.h>
 
-#define TRIGGER_PIN A1
-#define ECHO_PIN A0
-#define velocityPinA 5
-#define velocityPinB 6
+#define triggerPin A1
+#define echoPin A0
+#define speedPinA 5
+#define speedPinB 6
 
-SR04 ultrasonicSensor = SR04(ECHO_PIN, TRIGGER_PIN); 
-long obstracleDistance; 
-long obstracleRightDistance; 
-long obstracleLeftDistance; 
+SR04 ultrasonicSensor = SR04(echoPin, triggerPin);
+long rightObstacleDistance = 0;
+long obstacleDistance = 0;
+long leftObstacleDistance = 0;
 
-Servo myServo; 
-int myServoPosition = 0;
+Servo servo;
+int servoPosition = 0;
 
 int IN1 = 2;
 int IN2 = 4;
 int IN3 = 7;
 int IN4 = 8;
 
-int motorVelocity = 40;
+int motorSpeed = 40;
 
-void controlConfig() {
-  for(int i=2; i< 9; i++){
+void carConfig() {
+   for(int i=2; i< 9; i++) {
     pinMode(i, OUTPUT);
   }
-  Serial.begin(9600); 
-  myServo.attach(A2);
-  myServo.write(90);
+  Serial.begin(9600);
+
+  servo.attach(A2);
+  servo.write(90);
+}
+
+void motorsConfig() {
+  digitalWrite(speedPinA, motorSpeed);
+  digitalWrite(speedPinB, motorSpeed);
 }
 
 void goAdvance() {
-  digitalWrite(velocityPinA, motorVelocity);
-  digitalWrite(velocityPinB, motorVelocity);
+  motorsConfig();
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
+  delay(300);
+  stopMovement();
 }
 
 void goBack() {
-  digitalWrite(velocityPinA, motorVelocity);
-  digitalWrite(velocityPinB, motorVelocity);
+  motorsConfig();
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, HIGH);
@@ -49,79 +55,82 @@ void goBack() {
 }
 
 void goLeft() {
-  digitalWrite(velocityPinA, motorVelocity);
-  digitalWrite(velocityPinB, motorVelocity);
+  motorsConfig();
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
   delay(300);
-  stopMoviment();
+  stopMovement();
 }
 
 void goRight() {
-  digitalWrite(velocityPinA, motorVelocity);
-  digitalWrite(velocityPinB, motorVelocity);
+  motorsConfig();
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   delay(300);
-  stopMoviment();
+  stopMovement();
 }
 
-void stopMoviment() {
-  digitalWrite(velocityPinA, 0);
-  digitalWrite(velocityPinB, 0);
+void stopMovement() {
+  digitalWrite(speedPinA, 0);
+  digitalWrite(speedPinB, 0);
 }
 
-int measureDistance() {
-  obstracleDistance = ultrasonicSensor.Distance();
-  return obstracleDistance;
+int measureObstacleDistance() {
+  obstacleDistance = ultrasonicSensor.Distance();
+  return obstacleDistance;
 }
 
-void avoidObstacle() {
-  myServo.write(90);
-  goAdvance(); 
-  obstracleDistance = measureDistance(); 
-  
+void analyseField() {
+  stopMovement();
+  delay(500);
 
-  if (obstracleDistance <= 15) {
-    stopMoviment(); 
-    delay(500);
-    goBack(); 
-    delay(500);
-    stopMoviment(); 
-    delay(1000);
-    
-    myServo.write(0); 
-    obstracleRightDistance = measureDistance();
+  goBack();
+  delay(500);
 
-    delay(500);
-    
-    myServo.write(180); 
-    obstracleLeftDistance = measureDistance(); 
-    
-    delay(500);
-    
-    if (obstracleRightDistance < obstracleLeftDistance) {
+  stopMovement();
+  delay(1000);
+
+  servo.write(0);
+  rightObstacleDistance = measureObstacleDistance();
+  delay(500);
+
+  servo.write(180);
+  leftObstacleDistance = measureObstacleDistance();
+  delay(500);
+
+  return rightObstacleDistance, leftObstacleDistance;
+}
+
+void avoidObstacles() {
+  servo.write(90);
+  goAdvance();
+  obstacleDistance = measureObstacleDistance();
+
+  if (obstacleDistance <= 30) {
+    analyseField();
+
+    if (rightObstacleDistance < leftObstacleDistance) {
       goLeft();
       delay(1000);
-      stopMoviment();
-      
+      stopMovement();
     } else {
-       goRight(); 
-       delay(1000);
-       stopMoviment();  
+      goRight();
+      delay(1000);
+      stopMovement();
     }
+    
   }
 }
 
 void setup() {
-  controlConfig();
-  stopMoviment();  
+  carConfig();
+  stopMovement();
 }
 
 void loop() {
-  avoidObstacle();
+  avoidObstacles();
 }
